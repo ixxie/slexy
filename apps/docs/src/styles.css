@@ -1,0 +1,11 @@
+.tagline {
+  max-width: 30ch;
+}
+
+.site-title {
+  gap: 1rem;
+}
+
+.card {
+  border-radius: 1rem;
+}

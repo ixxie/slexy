@@ -1,0 +1,36 @@
+---
+title: Modern Editing Experiences
+description: Get started building your docs site with Starlight.
+template: splash
+hero:
+  tagline: Build extensible editing experiences, with your own UI library in Svelte 5.
+  image:
+    file: ../../assets/houston.webp
+  actions:
+    - text: Get started
+      link: /guides/getting-started/
+      icon: right-arrow
+    - text: Chat with us
+      link: https://discord.com/channels/953974421008293909/956476755856732160
+      icon: discord
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Features
+
+<CardGrid stagger>
+	<Card title="Reliable" icon="pen">
+		Build on <a href="https://lexical.dev">Lexical</a>, the library builds on a battle-tested code.
+	</Card>
+	<Card title="Modern" icon="rocket">
+		Designed to support modern block editors and hover toolbars as well as classic fixed-toolbar editors.
+	</Card>
+	<Card title="Extensible" icon="puzzle">
+		Modular architecture, allowing you to pick and choose the features you need.
+	</Card>
+	<Card title="Customizable" icon="seti:json">
+		Configure the default modules through props and CSS variables.
+	</Card>
+</CardGrid>
