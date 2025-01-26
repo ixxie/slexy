@@ -102,6 +102,10 @@ export class SvelteLexicalEditor {
 		this.#themes.push(theme);
 	}
 
+	update(updateFn: () => void, options?: core.EditorUpdateOptions) {
+		this.#instance?.update(updateFn, options);
+	}
+
 	get instance() {
 		return this.#instance;
 	}
