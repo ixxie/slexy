@@ -72,7 +72,7 @@ export class SvelteLexicalEditor {
 		});
 
 		// setup editable content
-		const contentNode: HTMLElement | null = node.querySelector('.sl-content');
+		const contentNode: HTMLElement | null = node.querySelector('.slex-content');
 		if (contentNode) {
 			this.console.debug('registering content node', contentNode);
 			contentNode.contentEditable = 'true';
@@ -80,7 +80,7 @@ export class SvelteLexicalEditor {
 		}
 
 		// setup toolbar
-		const toolbarNode: HTMLElement | null = node.querySelector('#sl-hover-menu');
+		const toolbarNode: HTMLElement | null = node.querySelector('#slex-hover-menu');
 		if (toolbarNode) {
 			this.console.debug('registering toolbar node', toolbarNode);
 			this.#hoverbar = new SvelteLexicalHoverToolbar(this, toolbarNode);

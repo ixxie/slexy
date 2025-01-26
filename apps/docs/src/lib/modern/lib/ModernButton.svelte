@@ -17,20 +17,20 @@
 </script>
 
 {#if !(context.mode && autohide)}
-	<button class="sl-tool" {onclick} aria-label={name}>
-		<div class="sl-icon" style="var(--slex-icon)"></div>
+	<button class="slex-button" {onclick} aria-label={name}>
+		<div class="slex-icon" style="var(--slex-icon)"></div>
 	</button>
 {/if}
 
 <style>
-	.sl-tool {
+	.slex-button {
 		border: none;
 		padding: 0.2rem;
 		font-weight: bold;
 		border-radius: 1rem;
 	}
 
-	.sl-icon {
+	.slex-icon {
 		width: var(--slex-icon-size, 1rem);
 		height: var(--slex-icon-size, 1rem);
 		mask: var(--slex-icon) center/100%;

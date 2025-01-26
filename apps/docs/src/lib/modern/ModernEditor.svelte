@@ -59,14 +59,14 @@
 		max-width: 60ch;
 	}
 
-	:global(.sl-content) {
+	:global(.slex-content) {
 		border: 1px solid var(--sl-color-text);
 		outline: none;
 		padding: 2rem;
 		border-radius: 1rem;
 	}
 
-	:global(pre) {
+	:global(.slex-debug) {
 		max-height: 500px;
 		overflow-y: auto;
 	}
