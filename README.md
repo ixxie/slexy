@@ -56,6 +56,6 @@ This docs site is currently basically empty: the goal was to validate that its e
 
 ### Example
 
-A usage example is found in `app/docs/src/lib/modern`. It demostrates what I would consider idiomatic editor code structure for the new API.
+A usage example is found in `app/docs/src/lib/modern`. It demostrates what I would consider idiomatic editor code structure for the new API. To view it in action, go to the docs folder and run `bun run dev`, and browse to `localhost:4321`. Then open the 'Getting Started' page (big button in the frontpage splash).
 
 
