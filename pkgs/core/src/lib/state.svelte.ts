@@ -15,7 +15,6 @@ export const defaults: SvelteLexicalConfig = {
 
 export class SvelteLexicalEditor {
 	#instance: core.LexicalEditor | undefined = $state.raw();
-	#hoverbar: SvelteLexicalHoverToolbar | undefined = $state();
 	#plugins: SvelteLexicalPlugin[] = $state([]);
 	#themes: SvelteLexicalTheme[] = $state([]);
 	#content: {} = $state.raw({});
@@ -78,13 +77,6 @@ export class SvelteLexicalEditor {
 			contentNode.contentEditable = 'true';
 			this.#instance.setRootElement(contentNode);
 		}
-
-		// setup toolbar
-		const toolbarNode: HTMLElement | null = node.querySelector('#slex-hover-menu');
-		if (toolbarNode) {
-			this.console.debug('registering toolbar node', toolbarNode);
-			this.#hoverbar = new SvelteLexicalHoverToolbar(this, toolbarNode);
-		}
 	}
 
 	plugin(plugin: SvelteLexicalPlugin) {
@@ -120,6 +112,10 @@ export class SvelteLexicalEditor {
 		);
 	}
 
+	get cmds() {
+		return this.commands;
+	}
+
 	get nodes() {
 		return this.#plugins.map(({ nodes }) => nodes ?? []).flat();
 	}
@@ -145,70 +141,6 @@ export class SvelteLexicalEditor {
 					warn: (..._: Parameters<typeof console.warn>) => {},
 					error: (..._: Parameters<typeof console.error>) => {}
 				};
-	}
-}
-
-class SvelteLexicalHoverToolbar {
-	#editor: SvelteLexicalEditor;
-	#node: HTMLElement;
-
-	constructor(editor: SvelteLexicalEditor, toolbarNode: HTMLElement) {
-		this.#editor = editor;
-		this.#node = toolbarNode;
-
-		if (!this.#editor.instance) {
-			return;
-		}
-
-		// set hover styling
-		Object.assign(this.#node.style, {
-			position: 'absolute',
-			'z-index': 999,
-			display: 'none'
-		});
-		this.#editor.console.info('initializing hover toolbar');
-
-		// try to toggle on pointer events
-		const rootNode = this.#editor.instance.getRootElement();
-		if (rootNode) {
-			this.#editor.console.info('registering root node listener for toolbar toggle');
-			on(rootNode, 'pointerup', () => {
-				this.toggle();
-			});
-		}
-
-		// deselect and hide toolbar on press
-		this.#editor.console.info('registering document node listener for hover toolbar clearing');
-		on(document, 'pointerdown', () => {
-			document.getSelection()?.removeAllRanges();
-			this.hide();
-		});
-
-		// except when clicking the toolbar
-		this.#editor.console.info('registering hover toolbar node listener to stop propagation');
-		on(toolbarNode, 'pointerdown', (e) => {
-			e.stopPropagation();
-		});
-	}
-
-	show() {
-		const { rect } = this.#editor.selection;
-		this.#node.style.display = 'flex';
-		this.#node.style.top = `calc(${rect?.top}px - ${this.#node.offsetHeight}px - 1.5rem)`;
-		this.#node.style.left = `calc(${rect?.left}px + ${rect?.width}px / 2 - ${this.#node.offsetWidth}px / 2)`;
-	}
-
-	hide() {
-		this.#node.style.display = 'none';
-	}
-
-	toggle() {
-		const { active } = this.#editor.selection;
-		if (active) {
-			this.show();
-		} else {
-			this.hide();
-		}
 	}
 }
 
@@ -243,11 +175,13 @@ export class SvelteLexicalSelection {
 	}
 }
 
-export function coalesce(...themes: core.EditorThemeClasses[]): core.EditorThemeClasses {
+// internal utils
+
+function coalesce(...themes: core.EditorThemeClasses[]): core.EditorThemeClasses {
 	return themes.reduce(deepMerge);
 }
 
-export function deepMerge(target: core.EditorThemeClasses, source: core.EditorThemeClasses) {
+function deepMerge(target: core.EditorThemeClasses, source: core.EditorThemeClasses) {
 	Object.keys(source).forEach((key) => {
 		if (isObject(source[key])) {
 			if (!target[key]) Object.assign(target, { [key]: {} });
@@ -259,6 +193,6 @@ export function deepMerge(target: core.EditorThemeClasses, source: core.EditorTh
 	return target;
 }
 
-export function isObject(item: any) {
+function isObject(item: any) {
 	return item && typeof item === 'object' && !Array.isArray(item);
 }

@@ -16,6 +16,7 @@
     "sharp": "^0.32.5",
     "svelte": "^5.19.2",
     "@svelte-lexical/core": "workspace:*",
+    "@svelte-lexical/float": "workspace:*",
     "@svelte-lexical/modules": "workspace:*",
     "typescript": "^5.7.3"
   }
