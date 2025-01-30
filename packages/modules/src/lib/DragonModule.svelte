@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { registerDragonSupport } from '@lexical/dragon';
 
-	import { useEditor } from '../core';
+	import { useEditor } from '@svelte-lexical/core';
 
 	const editor = useEditor();
 

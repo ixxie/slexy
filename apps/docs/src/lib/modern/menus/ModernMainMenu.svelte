@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useEditor } from "svelte-lexical/core";
+	import { useEditor } from "@svelte-lexical/core";
 
 	import { ModernMenu, ModernButton } from "../lib";
 

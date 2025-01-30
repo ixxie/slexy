@@ -5,7 +5,7 @@
 		DragonModule,
 		HistoryModule,
 		RichTextModule,
-	} from "svelte-lexical/modules";
+	} from "@svelte-lexical/modules";
 
 	import "./lib/icons.css";
 </script>

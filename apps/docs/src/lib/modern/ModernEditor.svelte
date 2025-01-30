@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Editor, SvelteLexicalEditor } from "svelte-lexical/core";
+	import { Editor, SvelteLexicalEditor } from "@svelte-lexical/core";
 
 	import * as core from "lexical";
 

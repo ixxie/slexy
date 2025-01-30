@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as core from 'lexical';
 
-	import { useEditor } from '../core/index.js';
+	import { useEditor } from '@svelte-lexical/core';
 
 	const editor = useEditor();
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { registerRichText } from '@lexical/rich-text';
 
-	import { useEditor } from '../core';
+	import { useEditor } from '@svelte-lexical/core';
 
 	const editor = useEditor();
 

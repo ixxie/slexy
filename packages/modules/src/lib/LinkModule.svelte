@@ -3,7 +3,7 @@
 	import * as link from '@lexical/link';
 	import * as utils from '@lexical/utils';
 
-	import { useEditor } from '../core/index.js';
+	import { useEditor } from '@svelte-lexical/core';
 
 	const {
 		validateUrl,
