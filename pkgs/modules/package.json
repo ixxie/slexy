@@ -2,8 +2,7 @@
 	"name": "@svelte-lexical/modules",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "vite dev",
-		"pkg": "bun run svelte-package -w",
+		"dev": "bun run svelte-package -w",
 		"build": "vite build && npm run prepack",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",

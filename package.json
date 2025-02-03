@@ -2,6 +2,9 @@
   "name": "svelte-lexical",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "dev": "bun --filter '*' dev"
+  },
   "workspaces": [
     "pkgs/*",
     "apps/*"
