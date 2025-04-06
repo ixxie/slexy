@@ -10,14 +10,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.31.1",
-    "@astrojs/svelte": "^7.0.4",
-    "astro": "^5.1.5",
-    "sharp": "^0.32.5",
-    "svelte": "^5.19.2",
+    "@astrojs/starlight": "^0.32.5",
+    "@astrojs/svelte": "^7.0.9",
+    "astro": "^5.6.1",
+    "sharp": "^0.34.0",
+    "svelte": "^5.25.6",
     "@svelte-lexical/core": "workspace:*",
     "@svelte-lexical/float": "workspace:*",
-    "@svelte-lexical/modules": "workspace:*",
-    "typescript": "^5.7.3"
+    "@svelte-lexical/plugins": "workspace:*",
+    "typescript": "^5.8.2"
   }
 }

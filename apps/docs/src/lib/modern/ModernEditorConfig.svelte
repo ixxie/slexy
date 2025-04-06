@@ -1,20 +1,20 @@
 <script lang="ts">
 	import {
-		CoreModule,
-		LinkModule,
-		DragonModule,
-		HistoryModule,
-		RichTextModule,
-	} from "@svelte-lexical/modules";
+		CorePlugin,
+		LinkPlugin,
+		DragonPlugin,
+		HistoryPlugin,
+		RichTextPlugin,
+	} from "@svelte-lexical/plugins";
 
 	import "./lib/icons.css";
 </script>
 
-<CoreModule />
-<RichTextModule />
-<HistoryModule />
-<DragonModule />
-<LinkModule />
+<CorePlugin />
+<RichTextPlugin />
+<HistoryPlugin />
+<DragonPlugin />
+<LinkPlugin />
 
 <style>
 	:root {

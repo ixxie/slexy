@@ -1,6 +1,9 @@
 import { on } from 'svelte/events';
 
+import { computePosition, flip, offset, inline } from '@floating-ui/dom';
+
 import type { SvelteLexicalEditor } from '@svelte-lexical/core';
+import { onDestroy } from 'svelte';
 
 export interface SvelteLexicalFloatConfig {
 	zIndex: number;
@@ -34,44 +37,37 @@ export class SvelteLexicalFloat {
 		});
 		this.#editor.console.info('initializing float element');
 
-		// try to toggle on pointer events
-		const rootNode = this.#editor.instance.getRootElement();
-		if (rootNode) {
-			this.#editor.console.info('registering root node listener for float toggle');
-			on(rootNode, 'pointerup', () => {
-				this.toggle();
-			});
-		}
-
-		// deselect and hide toolbar on press
-		this.#editor.console.info('registering document node listener for float element');
-		on(document, 'pointerdown', () => {
-			document.getSelection()?.removeAllRanges();
-			this.hide();
+		const cleanupHandler = this.#editor.onselection((selection) => {
+			this.toggle(selection);
 		});
-
-		// except when clicking the toolbar
-		this.#editor.console.info('registering float element listener to stop propagation');
-		on(element, 'pointerdown', (e) => {
-			e.stopPropagation();
-		});
+		onDestroy(cleanupHandler);
 	}
 
-	show() {
-		const { rect } = this.#editor.selection;
+	show(selection: Selection) {
+		const range = selection.getRangeAt(0);
+		const virt = {
+			getBoundingClientRect: () => range.getBoundingClientRect(),
+			getClientRects: () => range.getClientRects()
+		};
 		this.#element.style.display = 'flex';
-		this.#element.style.top = `calc(${rect?.top}px - ${this.#element.offsetHeight}px - 1.5rem)`;
-		this.#element.style.left = `calc(${rect?.left}px + ${rect?.width}px / 2 - ${this.#element.offsetWidth}px / 2)`;
+		computePosition(virt, this.#element, {
+			placement: 'top',
+			middleware: [inline(), offset(20)]
+		}).then(({ x, y }) => {
+			Object.assign(this.#element.style, {
+				left: `${x}px`,
+				top: `${y}px`
+			});
+		});
 	}
 
 	hide() {
 		this.#element.style.display = 'none';
 	}
 
-	toggle() {
-		const { active } = this.#editor.selection;
-		if (active) {
-			this.show();
+	toggle(selection: Selection | null) {
+		if (selection) {
+			this.show(selection);
 		} else {
 			this.hide();
 		}

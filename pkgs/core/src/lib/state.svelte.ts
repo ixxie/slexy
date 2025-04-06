@@ -1,6 +1,6 @@
 import * as core from 'lexical';
 
-import type { Snippet } from 'svelte';
+import { onDestroy, type Snippet } from 'svelte';
 import { on } from 'svelte/events';
 
 import type { SvelteLexicalPlugin, SvelteLexicalTheme } from './types.ts';
@@ -17,9 +17,9 @@ export class SvelteLexicalEditor {
 	#instance: core.LexicalEditor | undefined = $state.raw();
 	#plugins: SvelteLexicalPlugin[] = $state([]);
 	#themes: SvelteLexicalTheme[] = $state([]);
+	#handlers: (() => () => void)[] = $state([]);
 	#content: {} = $state.raw({});
 	#config: SvelteLexicalConfig;
-	selection: SvelteLexicalSelection;
 	editable: boolean = $state(true);
 	interface: {
 		[key: string]: Snippet<[{ [key: string]: Function }]> | null;
@@ -40,8 +40,6 @@ export class SvelteLexicalEditor {
 				this.#instance?.setEditable(false);
 			}
 		});
-		// setup selection
-		this.selection = new SvelteLexicalSelection();
 	}
 
 	init(node: HTMLElement) {
@@ -72,11 +70,18 @@ export class SvelteLexicalEditor {
 
 		// setup editable content
 		const contentNode: HTMLElement | null = node.querySelector('.slex-content');
-		if (contentNode) {
-			this.console.debug('registering content node', contentNode);
-			contentNode.contentEditable = 'true';
-			this.#instance.setRootElement(contentNode);
+		if (!contentNode) {
+			throw Error('Svelte Lexical: editor instantiated without a valid content node');
 		}
+		this.console.debug('registering content node', contentNode);
+		contentNode.contentEditable = 'true';
+		this.#instance.setRootElement(contentNode);
+
+		// setup root event handlers
+		const cleanup = this.#handlers.map((handler) => handler());
+		onDestroy(() => {
+			cleanup.forEach((f) => f());
+		});
 	}
 
 	plugin(plugin: SvelteLexicalPlugin) {
@@ -106,14 +111,42 @@ export class SvelteLexicalEditor {
 		return this.#content;
 	}
 
-	get commands() {
-		return Object.fromEntries(
-			this.#plugins.map(({ commands }) => (commands ? Object.entries(commands) : [])).flat()
-		);
+	get root() {
+		return this.#instance?.getRootElement();
+	}
+
+	onselection(handler: (selection: Selection | null) => void) {
+		return on(document, 'selectionchange', () => {
+			// get root
+			if (!this.root) {
+				return;
+			}
+			// evaluate conditions
+			const selection = window?.getSelection();
+			const ancestor = selection?.getRangeAt(0)?.commonAncestorContainer ?? null;
+			const validAncestor = this.root.contains(ancestor);
+			const isRange = selection?.type == 'Range';
+			// conditionally execute
+			if (selection && validAncestor && isRange) {
+				handler(selection);
+			} else {
+				handler(null);
+			}
+		});
+	}
+
+	onRoot<T extends (...args: any[]) => void>(event: string, handler: T) {
+		this.#handlers.push(() => (this.root ? on(this.root, event, handler) : () => () => {}));
+	}
+
+	onslash(handler: (key: string) => void) {
+		this.onRoot('keyup', handler);
 	}
 
 	get cmds() {
-		return this.commands;
+		return Object.fromEntries(
+			this.#plugins.map(({ commands }) => (commands ? Object.entries(commands) : [])).flat()
+		);
 	}
 
 	get nodes() {
@@ -141,37 +174,6 @@ export class SvelteLexicalEditor {
 					warn: (..._: Parameters<typeof console.warn>) => {},
 					error: (..._: Parameters<typeof console.error>) => {}
 				};
-	}
-}
-
-export class SvelteLexicalSelection {
-	#rect: DOMRect | undefined = $state();
-	#text: string | undefined = $state();
-	#active: boolean = $state(false);
-
-	constructor() {
-		// listen to selection changes
-		if (typeof window !== 'undefined') {
-			on(document, 'selectionchange', () => {
-				const selection = window?.getSelection();
-				this.#rect =
-					(selection?.rangeCount ?? 0) > 0
-						? selection?.getRangeAt(0)?.getBoundingClientRect()
-						: undefined;
-				this.#text = selection?.toString();
-				this.#active = !selection?.isCollapsed;
-			});
-		}
-	}
-
-	get rect() {
-		return this.#rect;
-	}
-	get text() {
-		return this.#text;
-	}
-	get active() {
-		return this.#active;
 	}
 }
 
