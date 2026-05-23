@@ -1,3 +1,6 @@
+<div align="right">
+  <a href="https://ixxie.codeberg.page/bergmirror/r/?cb=ixxie/slexy&gh=ixxie/slexy"><img src="https://ixxie.codeberg.page/bergmirror/badge.svg" alt="Codeberg → GitHub mirror"/></a>
+</div>
 
 # Svelte Lexical Redesign
 
